@@ -12,21 +12,18 @@ import com.android.shoppinglist.R
 import com.android.shoppinglist.domain.ShopItem
 
 class ShopListAdapter:
-    ListAdapter<ShopItem, ShopListAdapter.ViewHolder>(ShopItemDiffCallback()) {
+    ListAdapter<ShopItem, ShopViewHolder>(ShopItemDiffCallback()) {
     var count = 0
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textViewName = view.findViewById<TextView>(R.id.tv_name)
-        val textViewCount = view.findViewById<TextView>(R.id.tv_count)
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopViewHolder {
         Log.d("ShopListAdapter", "onCreateViewHolder, count: ${++count}")
         val view = LayoutInflater.from(parent.context)
             .inflate(viewType, parent, false)
-        return ViewHolder(view)
+        return ShopViewHolder(view)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -34,7 +31,7 @@ class ShopListAdapter:
         else R.layout.item_shop_disabled
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
         val shopItem = getItem(position)
         with(holder) {
             textViewName.text = shopItem.name
