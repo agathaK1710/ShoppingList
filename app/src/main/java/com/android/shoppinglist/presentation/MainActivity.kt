@@ -1,8 +1,9 @@
 package com.android.shoppinglist.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +14,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
 
+    private var fragmentContainer: FragmentContainerView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fragmentContainer = findViewById(R.id.container_fragment)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         adapter = ShopListAdapter()
         setupRecyclerView()
@@ -25,10 +29,28 @@ class MainActivity : AppCompatActivity() {
 
         val floatingBtn = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
         floatingBtn.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAdd(this)
-            startActivity(intent)
+            if(isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentAdd(this)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceAddItem())
+            }
         }
     }
+
+    private fun isOnePaneMode(): Boolean {
+        return fragmentContainer == null
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container_fragment, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+
 
     private val itemTouchHelper = ItemTouchHelper(object :
         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
@@ -58,8 +80,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClick() {
         adapter.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEdit(this, it.id)
-            startActivity(intent)
+            if(isOnePaneMode()) {
+                val intent = ShopItemActivity.newIntentEdit(this, it.id)
+                startActivity(intent)
+            } else {
+                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
+            }
         }
     }
 

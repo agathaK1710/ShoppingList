@@ -1,7 +1,5 @@
 package com.android.shoppinglist.presentation
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -156,8 +154,6 @@ class ShopItemFragment : Fragment() {
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
-        const val NAME = "name"
-        const val COUNT = "count"
 
         fun newInstanceAddItem(): ShopItemFragment {
             return ShopItemFragment().apply {
