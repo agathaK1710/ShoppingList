@@ -4,5 +4,4 @@
     android:id="@+id/container_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:name="com.android.shoppinglist.presentation.ShopItemFragment"
     tools:context=".presentation.ShopItemActivity" />

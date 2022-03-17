@@ -28,10 +28,10 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
 //        initComponents()
-//        parseIntent()
+        parseIntent()
 //        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
 //        addTextChangeListener()
-//        launchRightMode()
+        launchRightMode()
 //        observeViewModel()
     }
 
@@ -56,18 +56,22 @@ class ShopItemActivity : AppCompatActivity() {
 //
 //
 //        viewModel.shouldCloseScreen.observe(this) {
-//            finish()
+          //  finish()
 //        }
 //
 //
 //    }
 
-//    private fun launchRightMode() {
-//        when (screenMode) {
-//            MODE_ADD -> launchAddScreen()
-//            MODE_EDIT -> launchEditScreen()
-//        }
-//    }
+    private fun launchRightMode() {
+        val fragment = when (screenMode) {
+            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemId)
+            else -> throw RuntimeException ("Mode is not found")
+        }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container_fragment, fragment)
+            .commit()
+    }
 //
 //    private fun addTextChangeListener() {
 //        etName.addTextChangedListener(object : TextWatcher {
