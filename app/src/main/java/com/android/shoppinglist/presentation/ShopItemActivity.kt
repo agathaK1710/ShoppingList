@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.android.shoppinglist.R
 import com.android.shoppinglist.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnFinishedEditingListener {
     private var shopItemId = ShopItem.UNDEFIND_ID
     private var screenMode = MODE_UNKNOWN
 
@@ -18,6 +18,9 @@ class ShopItemActivity : AppCompatActivity() {
         launchRightMode()
     }
 
+    override fun onFinishedEditingListener() {
+        finish()
+    }
 
     private fun launchRightMode() {
         val fragment = when (screenMode) {
