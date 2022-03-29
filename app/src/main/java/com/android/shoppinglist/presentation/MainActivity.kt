@@ -1,6 +1,7 @@
 package com.android.shoppinglist.presentation
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -9,28 +10,26 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.android.shoppinglist.R
+import com.android.shoppinglist.databinding.ActivityMainBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity(), ShopItemFragment.OnFinishedEditingListener {
     private lateinit var viewModel: MainViewModel
-    private lateinit var adapter: ShopListAdapter
-
-    private var fragmentContainer: FragmentContainerView? = null
+    private lateinit var adapterShop: ShopListAdapter
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        fragmentContainer = findViewById(R.id.container_fragment)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
-        adapter = ShopListAdapter()
+        adapterShop = ShopListAdapter()
         setupRecyclerView()
         viewModel.shopList.observe(this) {
-            adapter.submitList(it)
+            adapterShop.submitList(it)
         }
-
-        val floatingBtn = findViewById<FloatingActionButton>(R.id.button_add_shop_item)
-        floatingBtn.setOnClickListener {
-            if(isOnePaneMode()) {
+        binding.buttonAddShopItem.setOnClickListener {
+            if (isOnePaneMode()) {
                 val intent = ShopItemActivity.newIntentAdd(this)
                 startActivity(intent)
             } else {
@@ -43,8 +42,9 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFinishedEditingList
         Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
         supportFragmentManager.popBackStack()
     }
+
     private fun isOnePaneMode(): Boolean {
-        return fragmentContainer == null
+        return binding.containerFragment == null
     }
 
     private fun launchFragment(fragment: Fragment) {
@@ -56,9 +56,8 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFinishedEditingList
     }
 
 
-
     private val itemTouchHelper = ItemTouchHelper(object :
-        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT){
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
@@ -68,35 +67,37 @@ class MainActivity : AppCompatActivity(), ShopItemFragment.OnFinishedEditingList
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            viewModel.removeShopItem(adapter.currentList[viewHolder.adapterPosition])
+            viewModel.removeShopItem(adapterShop.currentList[viewHolder.adapterPosition])
         }
     })
 
 
     private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.rv_shop_list)
-        recyclerView.adapter = adapter
-        recyclerView.recycledViewPool.setMaxRecycledViews(R.layout.item_shop_enabled, 20)
-        recyclerView.recycledViewPool.setMaxRecycledViews(R.layout.item_shop_disabled, 20)
-        setupLongClick()
-        setupClick()
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-    private fun setupClick() {
-        adapter.onShopItemClickListener = {
-            if(isOnePaneMode()) {
-                val intent = ShopItemActivity.newIntentEdit(this, it.id)
-                startActivity(intent)
-            } else {
-                launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
-            }
+        with(binding.rvShopList) {
+            adapter = adapterShop
+            recycledViewPool.setMaxRecycledViews(R.layout.item_shop_enabled, 20)
+            recycledViewPool.setMaxRecycledViews(R.layout.item_shop_disabled, 20)
+            setupLongClick()
+            setupClick()
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
-    private fun setupLongClick() {
-        adapter.onShopItemLongClickListener = {
-            viewModel.changeEnableState(it)
+
+private fun setupClick() {
+    adapterShop.onShopItemClickListener = {
+        if (isOnePaneMode()) {
+            val intent = ShopItemActivity.newIntentEdit(this, it.id)
+            startActivity(intent)
+        } else {
+            launchFragment(ShopItemFragment.newInstanceEditItem(it.id))
         }
     }
+}
+
+private fun setupLongClick() {
+    adapterShop.onShopItemLongClickListener = {
+        viewModel.changeEnableState(it)
+    }
+}
 }
