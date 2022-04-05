@@ -7,6 +7,6 @@ data class ShopItem(
     var id: Int = UNDEFIND_ID
 ){
     companion object {
-        val UNDEFIND_ID = -1
+        val UNDEFIND_ID = 0
     }
 }
