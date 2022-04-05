@@ -1,5 +1,7 @@
 package com.android.shoppinglist.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,8 +9,8 @@ import com.android.shoppinglist.data.ShopListRepositoryImpl
 import com.android.shoppinglist.domain.*
 import java.lang.Exception
 
-class ShopItemViewModel : ViewModel() {
-    private val repository = ShopListRepositoryImpl
+class ShopItemViewModel(application: Application) : AndroidViewModel(application){
+    private val repository = ShopListRepositoryImpl(application)
 
     private val getShopItemUseCase = GetShopItemForId(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)

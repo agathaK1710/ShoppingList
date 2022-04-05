@@ -18,6 +18,6 @@ interface ShopListDao {
     @Query("SELECT * FROM shopItem WHERE id=:shopItemId LIMIT 1")
     fun getShopItem(shopItemId: Int): ShopItemDBModel
 
-    @Query("DELETE FROM shopItem WHERE id:= shopItemId")
+    @Query("DELETE FROM shopItem WHERE id = :shopItemId")
     fun deleteShopItem(shopItemId: Int)
 }
