@@ -15,11 +15,19 @@ import com.android.shoppinglist.R
 import com.android.shoppinglist.databinding.FragmentShopItemBinding
 import com.android.shoppinglist.domain.ShopItem
 import com.google.android.material.textfield.TextInputLayout
+import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
 
     private val viewModel by lazy {
-        ViewModelProvider(this)[ShopItemViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    val component by lazy{
+        (requireActivity().application as ShopApp).component
     }
 
     private var shopItemId: Int = ShopItem.UNDEFIND_ID
@@ -36,6 +44,7 @@ class ShopItemFragment : Fragment() {
     }
 
     override fun onAttach(context: Context) {
+        component.inject(this)
         super.onAttach(context)
         if (context is OnFinishedEditingListener) {
             onFinishedEditingListener = context

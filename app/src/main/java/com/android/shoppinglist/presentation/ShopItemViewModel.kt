@@ -9,8 +9,9 @@ import com.android.shoppinglist.domain.EditShopItemUseCase
 import com.android.shoppinglist.domain.GetShopItemForId
 import com.android.shoppinglist.domain.ShopItem
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ShopItemViewModel(
+class ShopItemViewModel @Inject constructor(
     private val getShopItemUseCase: GetShopItemForId,
     private val addShopItemUseCase: AddShopItemUseCase,
     private val editShopItemUseCase: EditShopItemUseCase
