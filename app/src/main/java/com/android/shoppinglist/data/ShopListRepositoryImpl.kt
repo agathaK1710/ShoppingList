@@ -2,21 +2,15 @@ package com.android.shoppinglist.data
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.android.shoppinglist.domain.ShopItem
 import com.android.shoppinglist.domain.ShopListRepository
-import java.lang.Exception
-import kotlin.random.Random
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(
-    application: Application
+class ShopListRepositoryImpl @Inject constructor(
+    private val mapper: ShopListMapper,
+    private val shopListDao: ShopListDao
 ) : ShopListRepository {
-
-    val mapper = ShopListMapper()
-    val shopListDao = AppDatabase.getInstance(application).shopListDao()
-
 
     override fun getShopList(): LiveData<List<ShopItem>>  = Transformations.map(shopListDao.getShopList()){
         mapper.shopItemDBListToShopItemList(it)

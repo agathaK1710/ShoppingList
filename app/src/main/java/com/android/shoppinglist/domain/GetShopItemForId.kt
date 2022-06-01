@@ -1,6 +1,8 @@
 package com.android.shoppinglist.domain
 
-class GetShopItemForId(private val listRepository: ShopListRepository) {
+import javax.inject.Inject
+
+class GetShopItemForId @Inject constructor(private val listRepository: ShopListRepository) {
     suspend fun getShopItemForId(id: Int) : ShopItem {
         return listRepository.getShopItemForId(id)
     }

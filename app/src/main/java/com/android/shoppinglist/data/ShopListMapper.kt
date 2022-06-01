@@ -1,8 +1,9 @@
 package com.android.shoppinglist.data
 
 import com.android.shoppinglist.domain.ShopItem
+import javax.inject.Inject
 
-class ShopListMapper {
+class ShopListMapper @Inject constructor() {
 
     fun shopItemToShopItemDBModel(shopItem: ShopItem) = ShopItemDBModel(
         id = shopItem.id,
